@@ -1,6 +1,7 @@
 package com.eliezer.springcloud.msvc.financiera.msvcfinanciera.controllers;
 
 import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.Cliente;
+import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.Solicitud;
 import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.entity.Financiera;
 import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.services.FinancieraService;
 import feign.FeignException;
@@ -123,6 +124,54 @@ public class FinancieraController {
         return ResponseEntity.notFound().build();
     }
 
+    //Metodos de mapaeo de los nuevos metodos de la relacion solicitud financiera
+    @PutMapping("/asignar-solicitud/{financieraId}")
+    public ResponseEntity<?> asignarSolicitud(@RequestBody Solicitud solicitud, @PathVariable Long financieraId){
+        Optional<Solicitud> o;
+        try {
+            o = service.asignarSolicitud(solicitud, financieraId);
+        }catch (FeignException e){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje", "No existe la solicitud por " +
+                            "el id o error en la comunicacion: " + e.getMessage() ));
+        }
+        if(o.isPresent()){
+            return ResponseEntity.status(HttpStatus.CREATED).body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/crear-solicitud/{financieraId}")
+    public ResponseEntity<?> crearSolicitud(@RequestBody Solicitud solicitud, @PathVariable Long financieraId){
+        Optional<Solicitud> o;
+        try {
+            o = service.crearSolicitud(solicitud, financieraId);
+        }catch (FeignException e){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje", "No se pudo crear la solicitud " +
+                            "o error en la comunicacion: " + e.getMessage() ));
+        }
+        if(o.isPresent()){
+            return ResponseEntity.status(HttpStatus.CREATED).body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/eliminar-solicitud/{financieraId}")
+    public ResponseEntity<?> eliminarSolicitud(@RequestBody Solicitud solicitud, @PathVariable Long financieraId){
+        Optional<Solicitud> o;
+        try {
+            o = service.eliminarSolicitud(solicitud, financieraId);
+        }catch (FeignException e){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje", "No existe la solcitud por " +
+                            "el id o error en la comunicacion: " + e.getMessage() ));
+        }
+        if(o.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     //Metodo extraido para validar campos
     private ResponseEntity<Map<String, String>> validar(BindingResult result) {

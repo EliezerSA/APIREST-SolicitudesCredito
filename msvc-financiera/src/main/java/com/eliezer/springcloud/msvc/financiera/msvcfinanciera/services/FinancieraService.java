@@ -1,7 +1,9 @@
 package com.eliezer.springcloud.msvc.financiera.msvcfinanciera.services;
 
 import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.Cliente;
+import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.Solicitud;
 import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.entity.Financiera;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +25,11 @@ public interface FinancieraService {
     Optional<Cliente> asignarCliente(Cliente cliente, Long financieraId);
     Optional<Cliente> crearCliente(Cliente cliente, Long financieraId);
     Optional<Cliente> eliminarCliente(Cliente cliente, Long financieraId);
+
+
+    //Metodo para obtener de otro servicio en este caso solicitud
+    Optional<Solicitud> asignarSolicitud(Solicitud solicitud, Long solicitudId);
+    Optional<Solicitud> crearSolicitud(Solicitud solicitud, Long solicitudId);
+    Optional<Solicitud> eliminarSolicitud(Solicitud solicitud, Long solicitudId);
 
 }

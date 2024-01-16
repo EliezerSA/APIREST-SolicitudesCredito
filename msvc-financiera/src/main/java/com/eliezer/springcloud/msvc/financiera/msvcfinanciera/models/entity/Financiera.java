@@ -1,6 +1,7 @@
 package com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.entity;
 
 import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.Cliente;
+import com.eliezer.springcloud.msvc.financiera.msvcfinanciera.models.Solicitud;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -25,6 +26,10 @@ public class Financiera {
     @NotEmpty
     private String empresa;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "solicitud_id")//Crear foreign key de la otra tabla
+    private List<FinancieraSolicitud> financieraSolicitudes;
+
     //Relacion con la clase financiera_cliente una financiera puede tener muchos clientes
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "financiera_id")//Crear foreign Key de la otra tabla
@@ -33,10 +38,14 @@ public class Financiera {
     //Atributo no mapeado a peristencia de tablas
     @Transient
     private List<Cliente> clientes;
+    @Transient
+    private List<Solicitud> solicitudes;
 
     public Financiera(){
         financieraClientes = new ArrayList<>();
         clientes = new ArrayList<>();
+        financieraSolicitudes = new ArrayList<>();
+        solicitudes = new ArrayList<>();
     }
 
     public long getId() {
@@ -85,5 +94,31 @@ public class Financiera {
 
     public void setClientes(List<Cliente> clientes) {
         this.clientes = clientes;
+    }
+
+    //Metodos Add y Remove de Solicitudes
+    public void addFinancieraSolicitud(FinancieraSolicitud financieraSolicitud){
+        financieraSolicitudes.add(financieraSolicitud);
+    }
+
+    public void removeFinancieraSolicitud(FinancieraSolicitud financieraSolicitud){
+        financieraSolicitudes.remove(financieraSolicitud);
+    }
+
+    //Getter y Setter de la relacion con la clase financiera y cliente
+    public List<FinancieraSolicitud> getFinancieraSolicitudes() {
+        return financieraSolicitudes;
+    }
+
+    public void setFinancieraSolicitudes(List<FinancieraSolicitud> financieraSolicitudes) {
+        this.financieraSolicitudes = financieraSolicitudes;
+    }
+
+    public List<Solicitud> getSolicitudes() {
+        return solicitudes;
+    }
+
+    public void setSolicitudes(List<Solicitud> solicitudes) {
+        this.solicitudes = solicitudes;
     }
 }
